@@ -12,6 +12,7 @@ app.get('/version', (req, res) => {
   res.send('1.0.1')
 })
 
+// check on health of website
 app.get('/health', (req, res) => {
   res.send('ok')
 })
