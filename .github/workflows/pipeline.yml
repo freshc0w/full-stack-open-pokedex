@@ -21,6 +21,8 @@ jobs:
         run: npm run build
       - name: test
         run: npm run test
+      - name: Trigger Deployment
+        run: curl https://api.render.com/deploy/srv-${{ secrets.RENDER_SERVICE_ID }}?key=${{ secrets.RENDER_API_KEY3 }}
       # - name: e2e tests
       #   uses: cypress-io/github-action@v5
       #   with:
