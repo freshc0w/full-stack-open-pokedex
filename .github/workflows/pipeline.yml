@@ -24,12 +24,25 @@ jobs:
         run: npm run build
       - name: test
         run: npm run test
+        # - name: e2e tests
+        #   uses: cypress-io/github-action@v5
+        #   with:
+        #     command: npm run test:e2e
+        #     start: npm run start-prod
+        #     wait-on: http://localhost:5000
         if: ${{ github.event_name == 'push' }}
       - name: Trigger Deployment to Render
         run: curl https://api.render.com/deploy/srv-${{ secrets.RENDER_SERVICE_ID }}?key=${{ secrets.RENDER_API_KEY3 }}
-      # - name: e2e tests
-      #   uses: cypress-io/github-action@v5
-      #   with:
-      #     command: npm run test:e2e
-      #     start: npm run start-prod
-      #     wait-on: http://localhost:5000
+  tag_release:
+    needs: [simple_deployment_pipeline]
+    if: ${{ github.event_name == 'push' }}
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: '0'
+      - name: Bump version and push tag
+        uses: anothrNick/github-tag-action@1.67.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
