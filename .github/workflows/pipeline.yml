@@ -3,7 +3,10 @@ name: Deployment pipeline
 on:
   push:
     branches:
-      - master
+      - master # Note this can be main or any other branch name
+  pull_request:
+    branches: [master]
+    types: [opened, synchronize]
 
 jobs:
   simple_deployment_pipeline:
@@ -21,6 +24,7 @@ jobs:
         run: npm run build
       - name: test
         run: npm run test
+        if: ${{ github.event_name == 'push' }}
       - name: Trigger Deployment to Render
         run: curl https://api.render.com/deploy/srv-${{ secrets.RENDER_SERVICE_ID }}?key=${{ secrets.RENDER_API_KEY3 }}
       # - name: e2e tests
